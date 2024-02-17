@@ -9,19 +9,18 @@ let num1;
 let num2;
 let operand;
 let result;
+let gameContinues = true;
 
 
-while (true) {
+while (gameContinues) {
     num1 = getNumber();
     operand = getOperand();
     num2 = getNumber();
 
     result = calculate(num1, num2, operand);
-    alert(result);
+    alert('The result of calculation is: ' + result);
 
-    if (!userAgreesToContinue()) {
-        break;
-    }
+    gameContinues = confirmGameContinue();
 }
 
 function getNumber() {
@@ -36,7 +35,7 @@ function getNumber() {
 
 function getOperand() {
     while (true) {
-        let input = prompt('Please enter operand. valid operands are: ' + VALID_OPERANDS.toString());
+        let input = prompt('Please enter operand. valid operands are: ' + VALID_OPERANDS.join(" "));
         if (VALID_OPERANDS.includes(input)) {
             return input;
         }
@@ -61,6 +60,6 @@ function calculate(num1, num2, operand) {
     }
 }
 
-function userAgreesToContinue() {
+function confirmGameContinue() {
     return confirm("Would you like to perform another calculation? ");
 }
