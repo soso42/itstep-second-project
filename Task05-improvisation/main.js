@@ -11,7 +11,7 @@
 
 class Table {
 
-    cells = [
+    grid = [
         [' ', ' ', ' '],
         [' ', ' ', ' '],
         [' ', ' ', ' ']
@@ -21,13 +21,13 @@ class Table {
     setCell(coordinates, player) {
         let row = coordinates.row - 1;
         let col = coordinates.column - 1;
-        this.cells[row][col] = player;
+        this.grid[row][col] = player;
     }
 
     clearTable() {
         for (let i = 0; i < 3; i++) {
             for (let j = 0; j < 3; j++) {
-                this.cells[i][j] = ' ';
+                this.grid[i][j] = ' ';
             }
         }
     }
@@ -35,23 +35,23 @@ class Table {
     isFreeCell(coordinates) {
         let row = coordinates.row - 1;
         let col = coordinates.column - 1;
-        return this.cells[row][col] === ' ';
+        return this.grid[row][col] === ' ';
     }
 
     isWinner(player) {
-        return (this.cells[0][0] === player && this.cells[0][1] === player && this.cells[0][2] === player) ||
-            (this.cells[1][0] === player && this.cells[1][1] === player && this.cells[1][2] === player) ||
-            (this.cells[2][0] === player && this.cells[2][1] === player && this.cells[2][2] === player) ||
-            (this.cells[0][0] === player && this.cells[1][0] === player && this.cells[2][0] === player) ||
-            (this.cells[0][1] === player && this.cells[1][1] === player && this.cells[2][1] === player) ||
-            (this.cells[0][2] === player && this.cells[1][2] === player && this.cells[2][2] === player) ||
-            (this.cells[0][0] === player && this.cells[1][1] === player && this.cells[2][2] === player) ||
-            (this.cells[0][2] === player && this.cells[1][1] === player && this.cells[2][0] === player);
+        return (this.grid[0][0] === player && this.grid[0][1] === player && this.grid[0][2] === player) ||
+            (this.grid[1][0] === player && this.grid[1][1] === player && this.grid[1][2] === player) ||
+            (this.grid[2][0] === player && this.grid[2][1] === player && this.grid[2][2] === player) ||
+            (this.grid[0][0] === player && this.grid[1][0] === player && this.grid[2][0] === player) ||
+            (this.grid[0][1] === player && this.grid[1][1] === player && this.grid[2][1] === player) ||
+            (this.grid[0][2] === player && this.grid[1][2] === player && this.grid[2][2] === player) ||
+            (this.grid[0][0] === player && this.grid[1][1] === player && this.grid[2][2] === player) ||
+            (this.grid[0][2] === player && this.grid[1][1] === player && this.grid[2][0] === player);
     }
 
     toString() {
         let result = '-------------\n';
-        for (let row of this.cells) {
+        for (let row of this.grid) {
             result += '|';
             for (let col of row) {
                 result = result + ' ' + col + ' |';
@@ -112,9 +112,9 @@ class GameRunner {
     player;
     coordinates;
 
-    constructor(table, scanner) {
-        this.table = table;
-        this.scanner = scanner;
+    constructor() {
+        this.table = new Table();
+        this.scanner = new Scanner();
     }
 
 
@@ -123,35 +123,37 @@ class GameRunner {
         this.gameTurn = 0;
         this.table.clearTable();
 
+        console.log('NEW GAME STARTED');
+
         while (this.gameTurn < 9) {
             this.player = ++this.gameTurn % 2 === 1 ? 'X' : 'O';
             console.log(`Player ${this.player} turn. Please enter coordinates: `);
 
             while (true) {
-                this.coordinates = scanner.getCoordinates();
+                this.coordinates = this.scanner.getCoordinates();
                 if (!this.coordinates) {
                     console.log('Game terminated!');
                     return;
                 }
-                if (!table.isFreeCell(this.coordinates)) {
+                if (!this.table.isFreeCell(this.coordinates)) {
                     alert('The cell is not free. Please choose another one!');
                     continue;
                 }
                 break;
             }
 
-            table.setCell(this.coordinates, this.player);
+            this.table.setCell(this.coordinates, this.player);
 
-            console.log(table.toString());
+            console.log(this.table.toString());
 
-            if (table.isWinner(this.player)) {
+            if (this.table.isWinner(this.player)) {
                 console.log(`Player ${this.player} WON! Game ended...`);
                 break;
             }
 
         }
 
-        if ((!table.isWinner('X') && !table.isWinner('O')) && this.gameTurn >= 9) {
+        if ((!this.table.isWinner('X') && !this.table.isWinner('O')) && this.gameTurn >= 9) {
             console.log('DRAW. There was no winner in this game. Try again.')
         }
     }
@@ -174,12 +176,9 @@ class GameRunner {
 
 
 
-const table = new Table();
-const scanner = new Scanner();
-const gameRunner = new GameRunner(table, scanner);
 
-// gameRunner.run();
+const gameRunner = new GameRunner();
 
-while (confirm('Would you like to play new game? ')) {
+while (confirm('Would you like to start a new game? ')) {
     gameRunner.run();
 }
