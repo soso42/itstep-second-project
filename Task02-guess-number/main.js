@@ -34,7 +34,7 @@ if (!userWon) {
 
 // Utils
 function getNumOfTries() {
-    const input = prompt("Please enter number of tries: ");
+    const input = +prompt("Please enter number of tries: ");
     if (isNaN(input) || Number(input) <= 0) {
         return 10;
     }

@@ -24,6 +24,14 @@ class Table {
         this.cells[row][col] = player;
     }
 
+    clearTable() {
+        for (let i = 0; i < 3; i++) {
+            for (let j = 0; j < 3; j++) {
+                this.cells[i][j] = ' ';
+            }
+        }
+    }
+
     isFreeCell(coordinates) {
         let row = coordinates.row - 1;
         let col = coordinates.column - 1;
@@ -72,7 +80,7 @@ class Scanner {
         if (coordinates.row === null) {
             return null;
         }
-        coordinates.column = this.getAnInput('column');
+        coordinates.column = this.getSingleInput('column');
         if (coordinates.column === null) {
             return null;
         }
@@ -100,23 +108,24 @@ class Scanner {
 class GameRunner {
     table;
     scanner;
-    turn;
+    gameTurn;
     player;
     coordinates;
 
     constructor(table, scanner) {
         this.table = table;
         this.scanner = scanner;
-        this.turn = 0;
     }
 
 
     run() {
         this.printIntro();
+        this.gameTurn = 0;
+        this.table.clearTable();
 
-        while (this.turn < 9) {
-            this.player = ++this.turn % 2 === 1 ? 'X' : 'O';
-            console.log('Player ' + this.player + ' turn. Please enter coordinates: ');
+        while (this.gameTurn < 9) {
+            this.player = ++this.gameTurn % 2 === 1 ? 'X' : 'O';
+            console.log(`Player ${this.player} turn. Please enter coordinates: `);
 
             while (true) {
                 this.coordinates = scanner.getCoordinates();
@@ -136,12 +145,13 @@ class GameRunner {
             console.log(table.toString());
 
             if (table.isWinner(this.player)) {
-                console.log('Player ' + this.player + ' WON! Game ended...');
+                console.log(`Player ${this.player} WON! Game ended...`);
                 break;
             }
+
         }
 
-        if ((!table.isWinner('X') && !table.isWinner('O')) && this.turn >= 9) {
+        if ((!table.isWinner('X') && !table.isWinner('O')) && this.gameTurn >= 9) {
             console.log('DRAW. There was no winner in this game. Try again.')
         }
     }
@@ -152,20 +162,24 @@ class GameRunner {
             'in a horizontal, vertical, or diagonal row is the winner.');
         console.log('Grid example: ');
         console.log('     1   2   3 \n' +
-            '   -------------\n' +
-            "1  | X |   |   |\n" +
-            "2  |   |   | X |\n" +
-            "3  |   | O |   |\n" +
-            "   -------------");
+                    '   -------------\n' +
+                    "1  | X |   |   |\n" +
+                    "2  |   |   | X |\n" +
+                    "3  |   | O |   |\n" +
+                    "   -------------");
         console.log('Rows are numbered from top to bottom. Columns - from left to right.');
     }
 
 }
 
 
+
 const table = new Table();
 const scanner = new Scanner();
 const gameRunner = new GameRunner(table, scanner);
 
-gameRunner.run();
+// gameRunner.run();
 
+while (confirm('Would you like to play new game? ')) {
+    gameRunner.run();
+}
