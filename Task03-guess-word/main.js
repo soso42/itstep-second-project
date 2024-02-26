@@ -89,6 +89,12 @@ class Scanner {
             let input = prompt('Please enter desired number of attempts. (Cancel to choose default 10)');
             if (input === null) {
                 return 10;
+            } else if (input.trim().length === 0) {
+                alert('This field can not be empty!\nYou must enter a natural number, greater then 0!');
+                continue;
+            } else if (Math.floor(+input) !== +input) {  // if number is float
+                alert('Float is not a valid input\nYou must enter a natural number, greater then 0!');
+                continue;
             } else if (isNaN(+input) || +input <= 0) {
                 alert('You must enter a natural number, greater then 0!');
                 continue;
@@ -102,7 +108,7 @@ class Scanner {
             let input = prompt('Guess a character: (You must enter ONLY alphabetical characters)');
             if (input === null) {
                 return null;
-            } else if (input.length === 0) {
+            } else if (input.trim().length === 0) {
                 alert('This field can NOT be empty!');
                 continue;
             } else if (input.length > 1) {
