@@ -7,38 +7,22 @@
  * როცა შემოიტანს მნიშვნელობას (მცდელობის ფარგლებში) კოდმა უნდა დალოგოს: უფრო დაბალი, უფრო მაღალი ან სწორი გამოცნობა.
  */
 
+
+const RANDOM_NUMBER = getRandomNumber();
+const DEFAULT_NUM_OF_TRIES = 10;
 let tries = getNumOfTries();
-const randomNumber = getRandomNumber();
 let userInput;
-let userWon = false;
+let isWinner = false;
 
-
-while (!isGameFinished()) {
-    --tries;
-    userInput = getNumber();
-    if (userInput === randomNumber) {
-        alert(`YOU WON! the number was ${randomNumber}`);
-        userWon = true;
-        break;
-    } else if (userInput < randomNumber && !isGameFinished()) {
-        alert(`Wrong! Enter higher number. You have ${tries} tries left`);
-    } else if (userInput > randomNumber && !isGameFinished()) {
-        alert(`Wrong! Enter lower number. You have ${tries} tries left`);
-    }
-}
-
-if (!userWon) {
-    alert(`YOU LOST. You Couldn't guess the number and you have 0 tries left. Random number was ${randomNumber}`);
-}
 
 
 // Utils
 function getNumOfTries() {
     const input = +prompt("Please enter number of tries: ");
     if (isNaN(input) || Number(input) <= 0) {
-        return 10;
+        return DEFAULT_NUM_OF_TRIES;
     }
-    return Number(input);
+    return input;
 }
 
 function getRandomNumber() {
@@ -46,17 +30,57 @@ function getRandomNumber() {
 }
 
 function getNumber() {
-    let input;
     while (true) {
-        input = prompt("Please enter a number: ");
-        if (isNaN(input)) {
+        let input = prompt("Please enter a number:\n Valid numbers are from 1 to 1000: ");
+        if (input === null) {
+            return null;
+        } else if (input.trim().length === 0) {
+            alert("This field can not be empty! ");
+            continue;
+        } else if (isNaN(+input)) {
             alert("You must enter a valid number! ");
             continue;
+        } else if (+input < 1 || +input > 1000) {
+            alert("Valid numbers are from 1 to 1000! ");
+            continue;
+        } else if (isFloat(+input)) {
+            alert("You must enter a natural number! ");
+            continue;
         }
-        return Number(input);
+        return +input;
     }
 }
 
-function isGameFinished() {
-    return userWon || tries <= 0;
+function isFloat(n) {
+    return Math.floor(n) !== n;
 }
+
+function isGameFinished() {
+    return isWinner || tries <= 0;
+}
+
+function gameRunner() {
+    while (!isGameFinished()) {
+        --tries;
+        userInput = getNumber();
+        if (userInput === null) {
+            console.log('Game terminated...')
+            return;
+        } else if (userInput === RANDOM_NUMBER) {
+            alert(`YOU WON! the number was ${RANDOM_NUMBER}`);
+            isWinner = true;
+            break;
+        } else if (userInput < RANDOM_NUMBER && !isGameFinished()) {
+            alert(`Wrong! Enter higher number. You have ${tries} tries left`);
+        } else if (userInput > RANDOM_NUMBER && !isGameFinished()) {
+            alert(`Wrong! Enter lower number. You have ${tries} tries left`);
+        }
+    }
+
+    if (!isWinner) {
+        alert(`YOU LOST. You Couldn't guess the number and you have 0 tries left. Random number was ${RANDOM_NUMBER}`);
+    }
+}
+
+
+gameRunner();
