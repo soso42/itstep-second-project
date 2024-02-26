@@ -89,16 +89,43 @@ class Scanner {
 
     getSingleInput(text) {
         while (true) {
-            let input = +prompt('Please enter a ' + text.toUpperCase() + ' number - 1, 2 or 3  ' +
-                '(Clicking \'Cancel\', entering \'0\', or leaving the field empty will end the game)');
-            if (isNaN(input) || input < 0 || input >= 4) {
-                alert('Invalid input. Try again');
-                continue;
-            } else if (input === 0) {
+            let input = prompt('Please enter a ' + text.toUpperCase() + ' number - 1, 2 or 3  ' +
+                '(Clicking \'Cancel\' will end the game)');
+            if (input === null) {
                 return null;
+            } else if (isNaN(+input)) {
+                alert('Invalid input. You must enter natural numbers: 1, 2 or 3');
+                continue;
+            } else if (Math.floor(+input) !== +input) {
+                alert('Invalid input. Float is not a valid input. \nYou must enter natural numbers: 1, 2 or 3');
+                continue;
             }
-            return input;
+            else if(+input < 1 || +input > 3) {
+                alert('Invalid input. You must enter natural numbers: 1, 2 or 3');
+                continue;
+            }
+            return +input;
         }
+    }
+
+}
+
+
+
+class Utils {
+
+    printGameIntro() {
+        console.log('Classic tic-tac-toe game is a game for two players who take turns marking the spaces ' +
+            'in a three-by-three grid with X or O. The player who succeeds in placing three of their marks ' +
+            'in a horizontal, vertical, or diagonal row is the winner.');
+        console.log('Grid example: ');
+        console.log('     1   2   3 \n' +
+            '   -------------\n' +
+            "1  | X |   |   |\n" +
+            "2  |   |   | X |\n" +
+            "3  |   | O |   |\n" +
+            "   -------------");
+        console.log('Rows are numbered from top to bottom. Columns - from left to right.');
     }
 
 }
@@ -119,11 +146,11 @@ class GameRunner {
 
 
     run() {
-        this.printIntro();
         this.gameTurn = 0;
         this.table.clearTable();
 
         console.log('NEW GAME STARTED');
+        console.log(this.table.toString());
 
         while (this.gameTurn < 9) {
             this.player = ++this.gameTurn % 2 === 1 ? 'X' : 'O';
@@ -158,26 +185,15 @@ class GameRunner {
         }
     }
 
-    printIntro() {
-        console.log('Classic tic-tac-toe game is a game for two players who take turns marking the spaces ' +
-            'in a three-by-three grid with X or O. The player who succeeds in placing three of their marks ' +
-            'in a horizontal, vertical, or diagonal row is the winner.');
-        console.log('Grid example: ');
-        console.log('     1   2   3 \n' +
-                    '   -------------\n' +
-                    "1  | X |   |   |\n" +
-                    "2  |   |   | X |\n" +
-                    "3  |   | O |   |\n" +
-                    "   -------------");
-        console.log('Rows are numbered from top to bottom. Columns - from left to right.');
-    }
-
 }
 
 
 
 
 const gameRunner = new GameRunner();
+const utils = new Utils();
+
+utils.printGameIntro();
 
 while (confirm('Would you like to start a new game? ')) {
     gameRunner.run();
