@@ -12,31 +12,30 @@ let result;
 let gameContinues = true;
 
 
-while (gameContinues) {
-    num1 = getNumber();
-    operand = getOperand();
-    num2 = getNumber();
 
-    result = calculate(num1, num2, operand);
-    alert('The result of calculation is: ' + result);
-
-    gameContinues = confirmGameContinue();
-}
-
-function getNumber() {
+function getNumber(text) {
     while (true) {
-        let input = prompt('Please enter number ' );
-        if (!isNaN(input)) {
-            return Number(input);
+        let input = prompt(`Please enter number ${text}:\nClicking 'Cancel' will end the program` );
+        if (input === null) {
+            return null;
+        } else if (input.length === 0) {
+            alert('This field can not be empty. Try again...');
+            continue;
+        } else if (isNaN(+input)) {
+            alert('You must enter a number. Try again...');
+            continue;
         }
-        alert('You must enter a number. Try again...');
+        return +input;
     }
 }
 
 function getOperand() {
     while (true) {
-        let input = prompt('Please enter operand. valid operands are: ' + VALID_OPERANDS.join(" "));
-        if (VALID_OPERANDS.includes(input)) {
+        let input = prompt(`Please enter operand. valid operands are: ${VALID_OPERANDS.join(' ')} :
+                                            \nClicking 'Cancel' will end the program`);
+        if (input === null) {
+            return null;
+        } else if (VALID_OPERANDS.includes(input)) {
             return input;
         }
         alert('Invalid operand. Try again...');
@@ -61,5 +60,31 @@ function calculate(num1, num2, operand) {
 }
 
 function confirmGameContinue() {
-    return confirm("Would you like to perform another calculation? ");
+    return confirm('Would you like to perform another calculation? ');
 }
+
+
+function gameRunner() {
+    while (gameContinues) {
+        num1 = getNumber('1');
+        if (num1 === null) {
+            return;
+        }
+        operand = getOperand();
+        if (operand === null) {
+            return;
+        }
+        num2 = getNumber('2');
+        if (num2 === null) {
+            return;
+        }
+
+        result = calculate(num1, num2, operand);
+        alert('The result of calculation is: ' + result);
+
+        gameContinues = confirmGameContinue();
+    }
+}
+
+
+gameRunner();
