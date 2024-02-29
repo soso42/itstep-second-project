@@ -4,13 +4,6 @@
 შედეგის წარმატებით გამოტანა, სწორი ინპუტების შემთხვევაში javasc
 */
 
-const VALID_OPERANDS = ['+', '-', '*', '/', '%', '**'];
-let num1;
-let num2;
-let operand;
-let result;
-let gameContinues = true;
-
 
 
 function getNumber(text) {
@@ -30,6 +23,7 @@ function getNumber(text) {
 }
 
 function getOperand() {
+    const VALID_OPERANDS = ['+', '-', '*', '/', '%', '**'];
     while (true) {
         let input = prompt(`Please enter operand. valid operands are: ${VALID_OPERANDS.join(' ')} :
                                             \nClicking 'Cancel' will end the program`);
@@ -51,6 +45,10 @@ function calculate(num1, num2, operand) {
         case '*':
             return num1 * num2;
         case '/':
+            if (num2 === 0) {
+                alert('Error! Division by ZERO!');
+                return null;
+            }
             return num1 / num2;
         case '%':
             return num1 % num2;
@@ -65,24 +63,27 @@ function confirmGameContinue() {
 
 
 function gameRunner() {
+    let gameContinues = true;
     while (gameContinues) {
-        num1 = getNumber('1');
+        let num1 = getNumber('1');
         if (num1 === null) {
             return;
         }
-        operand = getOperand();
+        let operand = getOperand();
         if (operand === null) {
             return;
         }
-        num2 = getNumber('2');
+        let num2 = getNumber('2');
         if (num2 === null) {
             return;
         }
 
-        result = calculate(num1, num2, operand);
-        alert('The result of calculation is: ' + result);
+        let result = calculate(num1, num2, operand);
+        if (result) {
+            alert('The result of calculation is: ' + result);
+        }
 
-        gameContinues = confirmGameContinue();
+        gameContinues = confirm('Would you like to perform another calculation? ');
     }
 }
 
